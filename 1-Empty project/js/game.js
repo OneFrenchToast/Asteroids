@@ -7,7 +7,7 @@ var states = {
     game: "game",
 };
 
-var graphicAssets{
+var graphicAssets = {
 	ship:{URL:'assets/ship.png', name:'ship'},
 	bullet:{URL:'assets/bullet.png', name:'bullet'},
 
