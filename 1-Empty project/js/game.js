@@ -16,8 +16,13 @@ var graphicAssets{
 	asteroidSmall:{URL:'assets/asteroidSmall.png', name:'asteroidSmall'},
 };
 
+var shipProperties = {
+	startX: gameProperties.screenWidth * 0.5,
+	startY: gameProperties.screenHeight * 0.5,
+};
+
 var gameState = function(game){
-    
+    this.shipSprite;
 };
 
 gameState.prototype = {
@@ -32,11 +37,18 @@ gameState.prototype = {
     },
     
     create: function () {
+    	this.initGraphics();
         
     },
 
     update: function () {
         
+    },
+
+    initGraphics: function(){
+    	this.shipSprite = game.add.sprite(shipProperties.startX, shipProperties.startY, graphicAssets.ship.name);
+    	this.shipSprite.angle = -90;
+    	this.shipSprite.anchor.set(0.5, 0.5);
     },
 };
 
