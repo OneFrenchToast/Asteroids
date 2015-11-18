@@ -19,6 +19,10 @@ var graphicAssets = {
 var shipProperties = {
 	startX: gameProperties.screenWidth * 0.5,
 	startY: gameProperties.screenHeight * 0.5,
+    acceleration: 300,
+    drag: 100,
+    maxVelocity: 300,
+    angularVelocity: 200,
 };
 
 var gameState = function(game){
@@ -38,6 +42,7 @@ gameState.prototype = {
     
     create: function () {
     	this.initGraphics();
+        this.initPhysics();
         
     },
 
@@ -50,6 +55,14 @@ gameState.prototype = {
     	this.shipSprite.angle = -90;
     	this.shipSprite.anchor.set(0.5, 0.5);
     },
+
+    initPhysics: function() {
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+
+        game.physics.enable(this.shipSprite, Phaser.Physics.ARCADE);
+        this.shipSprite.body.drag.set(shipProperties.drag);
+        this.shipSprite.body.maxVelocity.set(shipProperties.maxVelocity);
+    }
 };
 
 var game = new Phaser.Game(gameProperties.screenWidth, gameProperties.screenHeight, Phaser.AUTO, 'gameDiv');
