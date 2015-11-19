@@ -25,12 +25,23 @@ var shipProperties = {
     angularVelocity: 200,
 };
 
+var bulletProperties = {
+    speed: 400,
+    interval: 250,
+    lifeSpan: 2000,
+    maxCount: 30,
+}
+
 var gameState = function(game){
     this.shipSprite;
 
     this.key_left;
     this.key_right;
     this.key_thrust;
+    this.key_fire;
+
+    this.bulletGroup;
+    this.bulletInterval = 0;
 };
 
 gameState.prototype = {
@@ -60,6 +71,8 @@ gameState.prototype = {
     	this.shipSprite = game.add.sprite(shipProperties.startX, shipProperties.startY, graphicAssets.ship.name);
     	this.shipSprite.angle = -90;
     	this.shipSprite.anchor.set(0.5, 0.5);
+
+        this.bulletGroup = game.add.group();
     },
 
     initPhysics: function() {
@@ -68,6 +81,13 @@ gameState.prototype = {
         game.physics.enable(this.shipSprite, Phaser.Physics.ARCADE);
         this.shipSprite.body.drag.set(shipProperties.drag);
         this.shipSprite.body.maxVelocity.set(shipProperties.maxVelocity);
+
+        this.bulletGroup.enableBody = true;
+        this.bulletGroup.physicsBodyType = Phaser.Physics.ARCADE;
+        this.bulletGroup.createMultiple(30, graphicAssets.bullet.name);
+        this.bulletGroup.setAll('anchor.x', 0.5);
+        this.bulletGroup.setAll('anchor.y', 0.5);
+        this.bulletGroup.setAll('lifespan', bulletProperties.lifespan);
     },
 
     initKeyboard: function() {
