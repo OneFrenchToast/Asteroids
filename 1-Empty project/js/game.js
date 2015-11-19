@@ -65,6 +65,7 @@ gameState.prototype = {
     update: function () {
         this.checkPlayerInput();
         this.checkBoundries(this.shipSprite);
+        this.bulletGroup.forEachExists(this.checkBoundries, this);
     },
 
     initGraphics: function(){
@@ -84,7 +85,7 @@ gameState.prototype = {
 
         this.bulletGroup.enableBody = true;
         this.bulletGroup.physicsBodyType = Phaser.Physics.ARCADE;
-        this.bulletGroup.createMultiple(30, graphicAssets.bullet.name);
+        this.bulletGroup.createMultiple(bulletProperties.maxCount, graphicAssets.bullet.name);
         this.bulletGroup.setAll('anchor.x', 0.5);
         this.bulletGroup.setAll('anchor.y', 0.5);
         this.bulletGroup.setAll('lifespan', bulletProperties.lifespan);
@@ -136,20 +137,20 @@ gameState.prototype = {
         }
     },
 
-    fire: function(){
-        if(game.time.now > this.bulletInterval){
+     fire: function () {
+        if (game.time.now > this.bulletInterval) {            
             var bullet = this.bulletGroup.getFirstExists(false);
-
-            if(bullet){
+            
+            if (bullet) {
                 var length = this.shipSprite.width * 0.5;
                 var x = this.shipSprite.x + (Math.cos(this.shipSprite.rotation) * length);
                 var y = this.shipSprite.y + (Math.sin(this.shipSprite.rotation) * length);
-
+                
                 bullet.reset(x, y);
                 bullet.lifespan = bulletProperties.lifeSpan;
                 bullet.rotation = this.shipSprite.rotation;
-
-                game.physics.arcade.velocityFromRotation(this.shipSprite.rotaion, bulletProperties.speed, bullet.body.velocity);
+                
+                game.physics.arcade.velocityFromRotation(this.shipSprite.rotation, bulletProperties.speed, bullet.body.velocity);
                 this.bulletInterval = game.time.now + bulletProperties.interval;
             }
         }
