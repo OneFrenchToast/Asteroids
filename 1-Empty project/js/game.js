@@ -172,6 +172,20 @@ gameState.prototype = {
             }
         }
     },
+
+    createAsteroid: function(x, y, size){
+        var asteroid = this.asteroidGroup.create(x, y, size);
+        asteroid.anchor.set(0.5, 0.5);
+        asteroid.body.angularVelocity = game.rnd.integerInRange(asteroidProperties[size].minAngularVelocity, asteroidProperties[size].maxAngularVelocity);
+
+        var randomAngle = game.math.degToRad(game.rnd.angle());
+        var randomVelocity = game.rnd.integerInRange(asteroidProperties[size].minVelocity, asteroidProperties[size].maxVelocity);
+    
+        game.physics.arcade.velocityFromRotation(randomAngle, randomVelocity, asteroid.body.velocity);
+    }
+
+
+
 };
 
 var game = new Phaser.Game(gameProperties.screenWidth, gameProperties.screenHeight, Phaser.AUTO, 'gameDiv');
