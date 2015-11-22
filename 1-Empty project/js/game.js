@@ -32,7 +32,7 @@ var bulletProperties = {
     maxCount: 30,
 }
 
-var asteroidProperties{
+var asteroidProperties = {
     startingAsteroids: 4,
     maxAsteroids: 20,
     incrementAsteroids: 2,
@@ -72,13 +72,14 @@ gameState.prototype = {
     	this.initGraphics();
         this.initPhysics();
         this.initKeyboard();
-        
+        this.resetAsteroids();
     },
 
     update: function () {
         this.checkPlayerInput();
         this.checkBoundries(this.shipSprite);
         this.bulletGroup.forEachExists(this.checkBoundries, this);
+        this.asteroidGroup.forEachExists(this.checkBoundries, this);
     },
 
     initGraphics: function(){
@@ -182,7 +183,26 @@ gameState.prototype = {
         var randomVelocity = game.rnd.integerInRange(asteroidProperties[size].minVelocity, asteroidProperties[size].maxVelocity);
     
         game.physics.arcade.velocityFromRotation(randomAngle, randomVelocity, asteroid.body.velocity);
-    }
+    },
+
+    resetAsteroids: function() {
+        for (var i = 0; i < this.asteroidsCount; i++){
+            var side = Math.round(Math.random());
+            var x;
+            var y;
+
+            if (side){
+                x = Math.round(Math.random()) * gameProperties.screenWidth;
+                y = Math.random() * gameProperties.screenHeight;
+            }
+            else{
+                x = Math.random() * gameProperties.screenWidth;
+                y = Math.round(Math.random()) * gameProperties.screenHeight;
+            }
+
+            this.createAsteroid(x, y, graphicAssets.asteroidLarge.name);
+        }
+    },
 
 
 
