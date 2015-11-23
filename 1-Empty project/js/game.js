@@ -1,6 +1,8 @@
 var gameProperties = {
     screenWidth: 640,
     screenHeight: 480,
+
+    delayToStartLevel: 3,
 };
 
 var states = {
@@ -15,6 +17,11 @@ var graphicAssets = {
 	asteroidMedium:{URL:'assets/asteroidMedium.png', name:'asteroidMedium'},
 	asteroidSmall:{URL:'assets/asteroidSmall.png', name:'asteroidSmall'},
 };
+
+var soundAssets = {
+    fire:{URL: ['assets/fire.m4a', 'assets/fire.ogg'], name: 'fire'},
+    destroyed: {URL: ['assets/destroyed.m4a', 'assets/destroyed.ogg'], name: 'destroyed'},
+}
 
 var shipProperties = {
 	startX: gameProperties.screenWidth * 0.5,
@@ -239,6 +246,10 @@ gameState.prototype = {
 
         this.splitAsteroid(asteroid);
         this.updateScore(asteroidProperties[asteroid.key].score);
+
+        if(!this.asteroidGroup.countLiving()){
+            game.time.events.add(Phaser.Timer.SECOND * gameProperties.delayToStartLevel, this.nextLevel, this);
+        }
     },
 
     destroyShip: function(){
@@ -264,7 +275,17 @@ gameState.prototype = {
     updateScore: function(score){
         this.score += score;
         this.tf_score.text = this.score;
-    }
+    },
+
+    nextLevel: function(){
+        this.asteroidGroup.removeAll(true);
+
+        if(this.asteroidsCount < asteroidProperties.maxAsteroids){
+            this.asteroidsCount += asteroidProperties.incrementAsteroids;
+        }
+
+        this.resetAsteroids();
+    },
 
 
 
