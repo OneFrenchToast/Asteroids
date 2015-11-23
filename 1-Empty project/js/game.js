@@ -23,6 +23,8 @@ var shipProperties = {
     drag: 100,
     maxVelocity: 300,
     angularVelocity: 200,
+    startingLives: 3,
+    timeToReset: 3,
 };
 
 var bulletProperties = {
@@ -42,6 +44,10 @@ var asteroidProperties = {
     asteroidSmall: { minVelocity: 50, maxVelocity: 300, minAngularVelocity: 0, maxAngularVelocity:200, score: 100},
 };
 
+var fontAssets = {
+    counterFontStyle:{font: '20px Arial', fill: '#FFFFFF', align: 'center'},
+}
+
 var gameState = function(game){
     this.shipSprite;
 
@@ -55,6 +61,9 @@ var gameState = function(game){
 
     this.asteroidGroup;
     this.asteroidsCount = asteroidProperties.startingAsteroids;
+
+    this.shipLives = shipProperties.startingLives;
+    this.tf_lives;
 };
 
 gameState.prototype = {
@@ -92,6 +101,8 @@ gameState.prototype = {
 
         this.bulletGroup = game.add.group();
         this.asteroidGroup = game.add.group();
+
+        this.tf_lives = game.add.text(20, 10, shipProperties.startingLives, fontAssets.counterFontStyle);
     },
 
     initPhysics: function() {
@@ -210,6 +221,24 @@ gameState.prototype = {
     asteroidCollision: function (target, asteroid){
         target.kill();
         asteroid.kill();
+
+        if (target.key == graphicAssets.ship.name){
+            this.destroyShip();
+        }
+    },
+
+    destroyShip: function(){
+        this.shipLives --;
+        this.tf_lives.text = this.shipLives;
+
+        if(this.shipLives){
+            game.time.events.add(Phaser.Timer.SECOND * shipProperties.timeToReset, this.resetShip, this);
+        }
+    },
+
+    resetShip: function(){
+        this.shipSprite.reset(shipProperties.startX, shipProperties.startY);
+        this.shipSprite.angle = -90;
     },
 
 
