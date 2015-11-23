@@ -39,8 +39,8 @@ var asteroidProperties = {
     maxAsteroids: 20,
     incrementAsteroids: 2,
 
-    asteroidLarge: { minVelocity: 50, maxVelocity: 150, minAngularVelocity: 0, maxAngularVelocity:200, score: 20, nextSize: graphicAssets.asteroidMedium.name },
-    asteroidMedium: { minVelocity: 50, maxVelocity: 200, minAngularVelocity: 0, maxAngularVelocity:200, score: 50, nextSize: graphicAssets.asteroidSmall.name},
+    asteroidLarge: { minVelocity: 50, maxVelocity: 150, minAngularVelocity: 0, maxAngularVelocity:200, score: 20, nextSize: graphicAssets.asteroidMedium.name, pieces: 2 },
+    asteroidMedium: { minVelocity: 50, maxVelocity: 200, minAngularVelocity: 0, maxAngularVelocity:200, score: 50, nextSize: graphicAssets.asteroidSmall.name, pieces: 2},
     asteroidSmall: { minVelocity: 50, maxVelocity: 300, minAngularVelocity: 0, maxAngularVelocity:200, score: 100},
 };
 
@@ -188,7 +188,10 @@ gameState.prototype = {
         }
     },
 
-    createAsteroid: function(x, y, size){
+    createAsteroid: function(x, y, size, pieces){
+        if (pieces== undefined) {pieces = 1;}
+
+        for(var i = 0; i < pieces; i++){
         var asteroid = this.asteroidGroup.create(x, y, size);
         asteroid.anchor.set(0.5, 0.5);
         asteroid.body.angularVelocity = game.rnd.integerInRange(asteroidProperties[size].minAngularVelocity, asteroidProperties[size].maxAngularVelocity);
@@ -197,6 +200,7 @@ gameState.prototype = {
         var randomVelocity = game.rnd.integerInRange(asteroidProperties[size].minVelocity, asteroidProperties[size].maxVelocity);
     
         game.physics.arcade.velocityFromRotation(randomAngle, randomVelocity, asteroid.body.velocity);
+        }
     },
 
     resetAsteroids: function() {
@@ -225,6 +229,8 @@ gameState.prototype = {
         if (target.key == graphicAssets.ship.name){
             this.destroyShip();
         }
+
+        this.splitAsteroid(asteroid);
     },
 
     destroyShip: function(){
@@ -239,6 +245,12 @@ gameState.prototype = {
     resetShip: function(){
         this.shipSprite.reset(shipProperties.startX, shipProperties.startY);
         this.shipSprite.angle = -90;
+    },
+
+    splitAsteroid: function(asteroid) {
+        if(asteroidProperties[asteroid.key].nextSize){
+            this.createAsteroid(asteroid.x, asteroid.y, asteroidProperties[asteroid.key].nextSize, asteroidProperties[asteroid.key].pieces);
+        }
     },
 
 
