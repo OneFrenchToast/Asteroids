@@ -32,6 +32,7 @@ var shipProperties = {
     angularVelocity: 200,
     startingLives: 3,
     timeToReset: 3,
+    blinkDelay: 0.2,
 };
 
 var bulletProperties = {
@@ -57,6 +58,7 @@ var fontAssets = {
 
 var gameState = function(game){
     this.shipSprite;
+    this.shipIsInvulnerable;
 
     this.key_left;
     this.key_right;
@@ -84,7 +86,7 @@ gameState.prototype = {
     preload: function () {
         game.load.image(graphicAssets.asteroidLarge.name, graphicAssets.asteroidLarge.URL);
         game.load.image(graphicAssets.asteroidMedium.name, graphicAssets.asteroidMedium.URL);
-        game.load.image(graphicAssets.asteroidSmall.name, graphicAssets.asteroidMedium.URL);
+        game.load.image(graphicAssets.asteroidSmall.name, graphicAssets.asteroidSmall.URL);
 
         game.load.image(graphicAssets.ship.name, graphicAssets.ship.URL);
         game.load.image(graphicAssets.bullet.name, graphicAssets.bullet.URL);
@@ -108,7 +110,10 @@ gameState.prototype = {
         this.asteroidGroup.forEachExists(this.checkBoundries, this);
 
         game.physics.arcade.overlap(this.bulletGroup, this.asteroidGroup, this.asteroidCollision, null, this);
-        game.physics.arcade.overlap(this.shipSprite, this.asteroidGroup, this.asteroidCollision, null, this);
+
+        if(!this.shipIsInvulnerable){
+            game.physics.arcade.overlap(this.shipSprite, this.asteroidGroup, this.asteroidCollision, null, this);
+        }
     },
 
     initGraphics: function(){
@@ -198,7 +203,7 @@ gameState.prototype = {
      fire: function () {
         if (game.time.now > this.bulletInterval) { 
             this.sndFire.play();
-                       
+
             var bullet = this.bulletGroup.getFirstExists(false);
             
             if (bullet) {
@@ -278,8 +283,21 @@ gameState.prototype = {
     },
 
     resetShip: function(){
+        this.shipIsInvulnerable = true;
         this.shipSprite.reset(shipProperties.startX, shipProperties.startY);
         this.shipSprite.angle = -90;
+
+        game.time.events.add(Phaser.Timer.SECOND * shipProperties.timeToReset, this.shipReady, this);
+        game.time.events.repeat(Phaser.Timer.SECOND * shipProperties.blinkDelay, shipProperties.timeToReset / shipProperties.blinkDelay, this.shipBlink, this);
+    },
+
+    shipReady: function() {
+        this.shipIsInvulnerable = false;
+        this.shipSprite.visible = true;
+    },
+
+    shipBlink: function(){
+        this.shipSprite.visible = !this.shipSprite.visible;
     },
 
     splitAsteroid: function(asteroid) {
