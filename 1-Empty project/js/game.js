@@ -21,7 +21,7 @@ var graphicAssets = {
 var soundAssets = {
     fire:{URL: ['assets/fire.m4a', 'assets/fire.ogg'], name: 'fire'},
     destroyed: {URL: ['assets/destroyed.m4a', 'assets/destroyed.ogg'], name: 'destroyed'},
-}
+};
 
 var shipProperties = {
 	startX: gameProperties.screenWidth * 0.5,
@@ -74,6 +74,9 @@ var gameState = function(game){
 
     this.score = 0;
     this.tf_score;
+
+    this.sndDestroyed;
+    this.sndFire;
 };
 
 gameState.prototype = {
@@ -85,10 +88,14 @@ gameState.prototype = {
 
         game.load.image(graphicAssets.ship.name, graphicAssets.ship.URL);
         game.load.image(graphicAssets.bullet.name, graphicAssets.bullet.URL);
+
+        game.load.audio(soundAssets.destroyed.name, soundAssets.destroyed.URL);
+        game.load.audio(soundAssets.fire.name, soundAssets.fire.URL);
     },
     
     create: function () {
     	this.initGraphics();
+        this.initSounds();
         this.initPhysics();
         this.initKeyboard();
         this.resetAsteroids();
@@ -117,6 +124,11 @@ gameState.prototype = {
         this.tf_score = game.add.text(gameProperties.screenWidth - 20, 10, "0", fontAssets.counterFontStyle);
         this.tf_score.align = 'right';
         this.tf_score.anchor.set(1, 0);
+    },
+
+    initSounds: function (){
+        this.sndDestroyed = game.add.audio(soundAssets.destroyed.name);
+        this.sndFire = game.add.audio(soundAssets.fire.name);
     },
 
     initPhysics: function() {
@@ -184,7 +196,9 @@ gameState.prototype = {
     },
 
      fire: function () {
-        if (game.time.now > this.bulletInterval) {            
+        if (game.time.now > this.bulletInterval) { 
+            this.sndFire.play();
+                       
             var bullet = this.bulletGroup.getFirstExists(false);
             
             if (bullet) {
@@ -237,6 +251,8 @@ gameState.prototype = {
     },
 
     asteroidCollision: function (target, asteroid){
+        this.sndDestroyed.play();
+
         target.kill();
         asteroid.kill();
 
