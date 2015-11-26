@@ -166,6 +166,7 @@ gameState.prototype = {
 
         this.asteroidGroup.enableBody = true;
         this.asteroidGroup.physicsBodyType = Phaser.Physics.ARCADE;
+
     },
 
     initKeyboard: function() {
@@ -299,6 +300,7 @@ gameState.prototype = {
         if(this.shipLives <= 0){
             game.state.start('wat');
             this.music.stop();
+            this.shipIsAlive = true;
         }
 
     },
