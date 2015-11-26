@@ -1,6 +1,6 @@
 var gameProperties = {
-    screenWidth: 640,
-    screenHeight: 480,
+    screenWidth: 738,
+    screenHeight: 446,
 
     delayToStartLevel: 3,
 };
@@ -10,12 +10,12 @@ var states = {
 };
 
 var graphicAssets = {
-	ship:{URL:'assets/ship.png', name:'ship'},
-	bullet:{URL:'assets/bullet.png', name:'bullet'},
+	ship:{URL:'assets/tony1.png', name:'ship'},
+	bullet:{URL:'assets/football.png', name:'bullet'},
 
-	asteroidLarge:{URL:'assets/asteroidLarge.png', name:'asteroidLarge'},
-	asteroidMedium:{URL:'assets/asteroidMedium.png', name:'asteroidMedium'},
-	asteroidSmall:{URL:'assets/asteroidSmall.png', name:'asteroidSmall'},
+	asteroidLarge:{URL:'assets/EliManningSprite.png', name:'asteroidLarge'},
+	asteroidMedium:{URL:'assets/ChipKelly.png', name:'asteroidMedium'},
+	asteroidSmall:{URL:'assets/RedskinSprite.png', name:'asteroidSmall'},
 };
 
 var soundAssets = {
@@ -47,9 +47,9 @@ var asteroidProperties = {
     maxAsteroids: 20,
     incrementAsteroids: 2,
 
-    asteroidLarge: { minVelocity: 50, maxVelocity: 150, minAngularVelocity: 0, maxAngularVelocity:200, score: 20, nextSize: graphicAssets.asteroidMedium.name, pieces: 2 },
-    asteroidMedium: { minVelocity: 50, maxVelocity: 200, minAngularVelocity: 0, maxAngularVelocity:200, score: 50, nextSize: graphicAssets.asteroidSmall.name, pieces: 2},
-    asteroidSmall: { minVelocity: 50, maxVelocity: 300, minAngularVelocity: 0, maxAngularVelocity:200, score: 100},
+    asteroidLarge: { minVelocity: 50, maxVelocity: 100, minAngularVelocity: 0, maxAngularVelocity:200, score: 20, nextSize: graphicAssets.asteroidMedium.name, pieces: 2 },
+    asteroidMedium: { minVelocity: 50, maxVelocity: 150, minAngularVelocity: 0, maxAngularVelocity:200, score: 50, nextSize: graphicAssets.asteroidSmall.name, pieces: 2},
+    asteroidSmall: { minVelocity: 50, maxVelocity: 200, minAngularVelocity: 0, maxAngularVelocity:200, score: 100},
 };
 
 var fontAssets = {
@@ -324,4 +324,6 @@ gameState.prototype = {
 
 
 };
+
+
 
