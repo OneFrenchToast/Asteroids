@@ -16,8 +16,8 @@ var menuState = {
     },
 
     startGame: function() {
-        var game = new Phaser.Game(1200, 800, Phaser.AUTO, 'gameDiv');
+        
         game.state.start('game');
         this.music.stop();
-    }
+    },
 }

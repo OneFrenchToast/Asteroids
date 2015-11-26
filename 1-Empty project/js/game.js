@@ -93,6 +93,8 @@ gameState.prototype = {
 
         game.load.audio(soundAssets.destroyed.name, soundAssets.destroyed.URL);
         game.load.audio(soundAssets.fire.name, soundAssets.fire.URL);
+
+        game.load.audio('NFL', ['assets/NFL.ogg', 'assets/NFL.m4a']);
     },
     
     create: function () {
@@ -101,6 +103,12 @@ gameState.prototype = {
         this.initPhysics();
         this.initKeyboard();
         this.resetAsteroids();
+
+        this.music = this.game.add.audio('NFL');
+        this.music.volume = 0.1;
+        this.music.loop = true;
+        this.music.play();
+
     },
 
     update: function () {
@@ -280,6 +288,7 @@ gameState.prototype = {
         if(this.shipLives){
             game.time.events.add(Phaser.Timer.SECOND * shipProperties.timeToReset, this.resetShip, this);
         }
+
     },
 
     resetShip: function(){
