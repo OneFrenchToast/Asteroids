@@ -9,6 +9,6 @@ var potato = {
     },
 
     resetGame: function() {
-        game.state.start('menu');
+        location.reload();
     }
 }
