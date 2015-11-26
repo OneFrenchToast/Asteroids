@@ -8,7 +8,7 @@ var menuState = {
 
     create: function() {
         this.music = this.game.add.audio('menuTheme');
-        this.music.volume = 0.1;
+        this.music.volume = 0.5;
         this.music.loop = true;
         this.music.play();
 

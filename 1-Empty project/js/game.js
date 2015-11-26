@@ -1,6 +1,6 @@
 var gameProperties = {
     screenWidth: 738,
-    screenHeight: 446,
+    screenHeight: 462,
 
     delayToStartLevel: 3,
 };
@@ -30,7 +30,7 @@ var shipProperties = {
     drag: 100,
     maxVelocity: 300,
     angularVelocity: 200,
-    startingLives: 3,
+    startingLives: 5,
     timeToReset: 3,
     blinkDelay: 0.2,
 };
@@ -53,12 +53,13 @@ var asteroidProperties = {
 };
 
 var fontAssets = {
-    counterFontStyle:{font: '20px Arial', fill: '#FFFFFF', align: 'center'},
+    counterFontStyle:{font: '20px Arial', fill: 'black', align: 'center'},
 }
 
 var gameState = function(game){
     this.shipSprite;
     this.shipIsInvulnerable;
+    this.shipIsAlive = true;
 
     this.key_left;
     this.key_right;
@@ -95,9 +96,12 @@ gameState.prototype = {
         game.load.audio(soundAssets.fire.name, soundAssets.fire.URL);
 
         game.load.audio('NFL', ['assets/NFL.ogg', 'assets/NFL.m4a']);
+        game.load.image('field', 'assets/field.png');
     },
     
     create: function () {
+        game.add.tileSprite(0, 0, gameProperties.screenWidth, gameProperties.screenHeight, 'field');
+
     	this.initGraphics();
         this.initSounds();
         this.initPhysics();
@@ -105,9 +109,11 @@ gameState.prototype = {
         this.resetAsteroids();
 
         this.music = this.game.add.audio('NFL');
-        this.music.volume = 0.1;
+        this.music.volume = 0.5;
         this.music.loop = true;
         this.music.play();
+
+        
 
     },
 
@@ -209,7 +215,7 @@ gameState.prototype = {
     },
 
      fire: function () {
-        if (game.time.now > this.bulletInterval) { 
+        if (game.time.now > this.bulletInterval && this.shipIsAlive) { 
             this.sndFire.play();
 
             var bullet = this.bulletGroup.getFirstExists(false);
@@ -271,6 +277,7 @@ gameState.prototype = {
 
         if (target.key == graphicAssets.ship.name){
             this.destroyShip();
+            this.shipIsAlive = false;
         }
 
         this.splitAsteroid(asteroid);
@@ -289,11 +296,17 @@ gameState.prototype = {
             game.time.events.add(Phaser.Timer.SECOND * shipProperties.timeToReset, this.resetShip, this);
         }
 
+        if(this.shipLives <= 0){
+            game.state.start('wat');
+            this.music.stop();
+        }
+
     },
 
     resetShip: function(){
         this.shipIsInvulnerable = true;
         this.shipSprite.reset(shipProperties.startX, shipProperties.startY);
+        this.shipIsAlive = true;
         this.shipSprite.angle = -90;
 
         game.time.events.add(Phaser.Timer.SECOND * shipProperties.timeToReset, this.shipReady, this);
