@@ -19,5 +19,5 @@ var menuState = {
         
         game.state.start('game');
         this.music.stop();
-    },
+    }
 }

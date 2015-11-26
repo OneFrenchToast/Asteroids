@@ -3,6 +3,7 @@ var game = new Phaser.Game(gameProperties.screenWidth, gameProperties.screenHeig
 
 game.state.add('menu', menuState);
 game.state.add('game', gameState);
+game.state.add('wat', potato);
 
 
 
